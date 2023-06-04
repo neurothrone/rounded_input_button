@@ -171,40 +171,43 @@ class _RightRoundedButtonState extends State<RightRoundedButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: isButtonEnabled ? widget.backgroundColor : widget.disabledColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(widget.borderRadius),
-          bottomRight: Radius.circular(widget.borderRadius),
-        ),
-      ),
-      child: InkWell(
-        onTap: !isButtonEnabled
-            ? null
-            : () {
-                widget.onTap();
-                FocusScope.of(context).unfocus();
-              },
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(widget.borderRadius),
-          bottomRight: Radius.circular(widget.borderRadius),
-        ),
-        splashColor: Colors.deepPurple.shade700,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(widget.borderRadius),
-              bottomRight: Radius.circular(widget.borderRadius),
-            ),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 60.0),
+      child: Material(
+        color: isButtonEnabled ? widget.backgroundColor : widget.disabledColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(widget.borderRadius),
+            bottomRight: Radius.circular(widget.borderRadius),
           ),
-          child: Text(
-            widget.text,
-            style: TextStyle(
-              color: widget.foregroundColor,
-              fontSize: 16.0,
+        ),
+        child: InkWell(
+          onTap: !isButtonEnabled
+              ? null
+              : () {
+            widget.onTap();
+            FocusScope.of(context).unfocus();
+          },
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(widget.borderRadius),
+            bottomRight: Radius.circular(widget.borderRadius),
+          ),
+          splashColor: Colors.deepPurple.shade700,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(widget.borderRadius),
+                bottomRight: Radius.circular(widget.borderRadius),
+              ),
+            ),
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                color: widget.foregroundColor,
+                fontSize: 16.0,
+              ),
             ),
           ),
         ),
