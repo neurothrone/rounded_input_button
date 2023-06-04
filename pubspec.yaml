@@ -1,8 +1,7 @@
 name: rounded_input_button
 description: A custom widget consisting of a TextField and a Button
 version: 0.0.1
-repository:
-homepage:
+repository: https://github.com/neurothrone/rounded_input_button
 
 environment:
   sdk: '>=3.0.1 <4.0.0'
