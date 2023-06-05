@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-class RoundedInputButton extends StatelessWidget {
+class RoundedInputButton extends StatefulWidget {
   const RoundedInputButton({
     super.key,
-    required this.controller,
     required this.onPressed,
-    required this.buttonText,
+    this.buttonText,
     this.hintText = "",
     this.borderRadius = 30.0,
     this.borderColor = Colors.transparent,
@@ -16,9 +15,9 @@ class RoundedInputButton extends StatelessWidget {
     this.textAlign = TextAlign.center,
   });
 
-  final TextEditingController controller;
-  final VoidCallback onPressed;
-  final String buttonText;
+  final Function(String text) onPressed;
+
+  final String? buttonText;
   final String hintText;
 
   final double borderRadius;
@@ -31,36 +30,62 @@ class RoundedInputButton extends StatelessWidget {
   final TextAlign textAlign;
 
   @override
+  State<RoundedInputButton> createState() => _RoundedInputButtonState();
+}
+
+class _RoundedInputButtonState extends State<RoundedInputButton> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
       child: Row(
         children: [
           Expanded(
             child: LeftRoundedTextField(
-              onSubmitted: onPressed,
-              controller: controller,
-              hintText: hintText,
-              borderColor: borderColor,
-              focusedBorderColor: focusedBorderColor,
-              borderRadius: borderRadius,
+              onSubmitted: _onPressed,
+              controller: _controller,
+              hintText: widget.hintText,
+              borderColor: widget.borderColor,
+              focusedBorderColor: widget.focusedBorderColor,
+              borderRadius: widget.borderRadius,
               textAlign: TextAlign.center,
             ),
           ),
           SizedBox(
             height: double.infinity,
             child: RightRoundedButton(
-              onTap: onPressed,
-              controller: controller,
-              text: buttonText,
-              borderRadius: borderRadius,
-              foregroundColor: buttonForegroundColor,
-              backgroundColor: buttonBackgroundColor,
-              disabledColor: buttonDisabledColor ?? Colors.grey.shade600,
+              onTap: _onPressed,
+              controller: _controller,
+              text: widget.buttonText,
+              borderRadius: widget.borderRadius,
+              foregroundColor: widget.buttonForegroundColor,
+              backgroundColor: widget.buttonBackgroundColor,
+              disabledColor: widget.buttonDisabledColor ?? Colors.grey.shade600,
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _onPressed() {
+    if (_controller.text.isEmpty) return;
+
+    widget.onPressed(_controller.text);
+    _controller.clear();
   }
 }
 
@@ -127,7 +152,7 @@ class RightRoundedButton extends StatefulWidget {
     super.key,
     required this.onTap,
     required this.controller,
-    required this.text,
+    this.text,
     required this.borderRadius,
     required this.foregroundColor,
     required this.backgroundColor,
@@ -136,7 +161,7 @@ class RightRoundedButton extends StatefulWidget {
 
   final VoidCallback onTap;
   final TextEditingController controller;
-  final String text;
+  final String? text;
 
   final double borderRadius;
 
@@ -182,17 +207,17 @@ class _RightRoundedButtonState extends State<RightRoundedButton> {
           ),
         ),
         child: InkWell(
-          onTap: !isButtonEnabled
-              ? null
-              : () {
-            widget.onTap();
-            FocusScope.of(context).unfocus();
-          },
+          onTap: isButtonEnabled
+              ? () {
+                  widget.onTap();
+                  FocusScope.of(context).unfocus();
+                }
+              : null,
           borderRadius: BorderRadius.only(
             topRight: Radius.circular(widget.borderRadius),
             bottomRight: Radius.circular(widget.borderRadius),
           ),
-          splashColor: Colors.deepPurple.shade700,
+          splashColor: widget.backgroundColor,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             alignment: Alignment.center,
@@ -202,13 +227,15 @@ class _RightRoundedButtonState extends State<RightRoundedButton> {
                 bottomRight: Radius.circular(widget.borderRadius),
               ),
             ),
-            child: Text(
-              widget.text,
-              style: TextStyle(
-                color: widget.foregroundColor,
-                fontSize: 16.0,
-              ),
-            ),
+            child: widget.text != null
+                ? Text(
+                    widget.text!,
+                    style: TextStyle(
+                      color: widget.foregroundColor,
+                      fontSize: 16.0,
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ),
         ),
       ),
