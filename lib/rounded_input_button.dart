@@ -61,7 +61,7 @@ class _RoundedInputButtonState extends State<RoundedInputButton> {
               borderColor: widget.borderColor,
               focusedBorderColor: widget.focusedBorderColor,
               borderRadius: widget.borderRadius,
-              textAlign: TextAlign.center,
+              textAlign: widget.textAlign,
             ),
           ),
           SizedBox(
@@ -114,7 +114,7 @@ class LeftRoundedTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       cursorColor: focusedBorderColor,
-      textAlign: TextAlign.center,
+      textAlign: textAlign,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         fillColor: Colors.white,
